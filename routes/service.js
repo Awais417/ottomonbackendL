@@ -10,21 +10,6 @@ cloudinary.config({
   api_secret: 'FCqYSd-J1Kew_VgMCOBZSIcqnJY'
 
 });
-
-router.get("/", (req, res, next) => {
-    Service.find()
-    .then((result) => {
-      res.status(200).json({
-        serviceData: result,
-      });
-    })
-    .catch((err) => {
-      console.log(err);
-      res.status(500).json({
-        error: err,
-      });
-    });
-});
 router.post("/",
 // checkAuth,
 (req, res, next) => {
@@ -57,6 +42,21 @@ router.post("/",
     })  
   })
 });
+router.get("/", (req, res, next) => {
+    Service.find()
+    .then((result) => {
+      res.status(200).json({
+        serviceData: result,
+      });
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(500).json({
+        error: err,
+      });
+    });
+});
+
 router.get("/:id", (req, res, next) => {
   console.log(req.params.id);
   Service.findById(req.params.id).then(result=>{
