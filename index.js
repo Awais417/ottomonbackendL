@@ -7,19 +7,17 @@ var logger = require("morgan");
 var connectToDB = require("./db/conn.js");
 const cors=require('cors')
 var indexRouter = require("./routes/index");
-// var adminRouter = require("./routes/admin");
-var authRouter = require("./routes/auth.js");
+ var authRouter = require("./routes/auth.js");
  var registerRouter = require("./routes/Register.js");
 var usersRouter = require("./routes/users.js");
-
    const serviceRoute=require('./routes/service.js');
 const serviceFormRoute=require('./routes/serviceForm.js');
 var resetpasswordRouter = require("./routes/reset-password.js");
 var userRouter = require("./routes/user.js");
+const lawRouter = require("./routes/law.js");
+
 const fileUpload=require('express-fileupload')
 var app = express();
-
-
 app.use(cors());
 app.use(fileUpload({
   useTempFiles:true
@@ -27,10 +25,8 @@ app.use(fileUpload({
 app.use(
   express.urlencoded({ extended: true })
 );
-// view engine setup
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "jade");
-
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -45,9 +41,10 @@ app.use("/", indexRouter);
  app.use("/register", registerRouter);
  app.use("/auth", authRouter);
 app.use("/users", usersRouter);
-
   app.use('/service',serviceRoute)
  app.use('/serviceForm',serviceFormRoute)
+ app.use("/api/law", lawRouter);
+
 app.use("/api/user", userRouter);
 app.use("/reset-password", resetpasswordRouter);
 //Initialize DB
@@ -66,29 +63,17 @@ app.use(function (req, res, next) {
   );
   next(createError(404));
 });
-
-
-
-
-// error handler
 app.use(function (err, req, res, next) {
-  // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get("env") === "development" ? err : {};
-
-  // render the error page
   res.status(err.status || 500);
   res.render("error");
 });
-
 app.get('/signup', function(req, res){
   res.render('signin');
 });
-
-// connection
 const port = process.env.PORT || 9001;
 app.listen(port, () => console.log(`Listening to port ${port}`));
-
 module.exports = app;
 
 
